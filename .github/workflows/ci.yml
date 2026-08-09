@@ -14,22 +14,37 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      # macos-latest is arm64, macos-13 is x86_64 — both are needed, or a wrong
-      # `intel:` sha256 would never be exercised.
-      matrix:
-        os: [macos-latest, macos-13]
+    # macos-latest is arm64. Intel is deliberately not a matrix leg: the
+    # macos-13 runner queues for tens of minutes and is deprecated. The intel
+    # sha256 comes from GitHub's own per-asset digest, and the intel URL is
+    # checked below, so the untested part is only "does the x64 dmg mount".
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Tap this checkout
-        run: brew tap codingprotocols/tap "$GITHUB_WORKSPACE"
+      # setup-homebrew already registers this tap against its GitHub remote, so
+      # `brew tap <name> <path>` fails with a remote mismatch. Overwrite the tap
+      # directory instead, which makes brew read exactly this checkout.
+      - name: Install tap from this checkout
+        run: |
+          TAPDIR="$(brew --repository)/Library/Taps/codingprotocols/homebrew-tap"
+          rm -rf "$TAPDIR"
+          mkdir -p "$(dirname "$TAPDIR")"
+          cp -R "$GITHUB_WORKSPACE" "$TAPDIR"
+          brew tap  # list, to confirm it is registered
+
+      - name: Verify both dmg URLs resolve
+        run: |
+          version=$(grep -m1 -o 'version "[^"]*"' Casks/podscape.rb | cut -d'"' -f2)
+          base="https://github.com/codingprotocols/podscape/releases/download/v${version}"
+          for f in "Podscape-${version}-arm64.dmg" "Podscape-${version}.dmg"; do
+            code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 300 "$base/$f")
+            echo "$code  $f"
+            [ "$code" = "200" ] || { echo "::error::$f did not resolve (HTTP $code)"; exit 1; }
+          done
 
       - name: Audit formula
         run: brew audit --strict --online codingprotocols/tap/podscape-mcp
@@ -47,7 +62,7 @@ jobs:
         run: |
           brew install --cask codingprotocols/tap/podscape
           test -d "/Applications/Podscape.app" || {
-            echo "Podscape.app was not installed" >&2; exit 1; }
+            echo "::error::Podscape.app was not installed"; exit 1; }
 
       - name: Verify installed app is signed and notarized
         run: |
