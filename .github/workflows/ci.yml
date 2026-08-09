@@ -25,15 +25,16 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      # setup-homebrew already registers this tap against its GitHub remote, so
-      # `brew tap <name> <path>` fails with a remote mismatch. Overwrite the tap
-      # directory instead, which makes brew read exactly this checkout.
-      - name: Install tap from this checkout
+      # `brew tap <name> <path>` fails here with a remote mismatch, because
+      # setup-homebrew has already registered the tap. Point the tap directory
+      # at this checkout with a symlink — a plain directory breaks the action's
+      # post-job cleanup, which runs `rm` (not `rm -rf`) on this path.
+      - name: Link tap to this checkout
         run: |
           TAPDIR="$(brew --repository)/Library/Taps/codingprotocols/homebrew-tap"
-          rm -rf "$TAPDIR"
           mkdir -p "$(dirname "$TAPDIR")"
-          cp -R "$GITHUB_WORKSPACE" "$TAPDIR"
+          rm -rf "$TAPDIR"
+          ln -s "$GITHUB_WORKSPACE" "$TAPDIR"
           brew tap  # list, to confirm it is registered
 
       - name: Verify both dmg URLs resolve
