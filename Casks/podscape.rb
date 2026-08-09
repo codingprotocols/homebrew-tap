@@ -20,8 +20,9 @@ cask "podscape" do
   # leaves it alone. Users who want Homebrew to drive upgrades: `brew upgrade --greedy`.
   auto_updates true
 
-  # Electron 41's LSMinimumSystemVersion is 12.0.
-  depends_on macos: ">= :monterey"
+  # Electron 41's LSMinimumSystemVersion is 12.0. The bare symbol means
+  # "monterey or newer"; the ">= :monterey" string form is deprecated.
+  depends_on macos: :monterey
 
   app "Podscape.app"
 
