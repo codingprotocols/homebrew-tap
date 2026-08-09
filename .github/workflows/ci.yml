@@ -20,7 +20,7 @@ jobs:
     # checked below, so the untested part is only "does the x64 dmg mount".
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
