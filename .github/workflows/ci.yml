@@ -1,0 +1,55 @@
+name: CI
+
+# The podscape release workflow pushes here unattended, so this is the only
+# gate between a bad checksum/URL and a broken `brew install` for users.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      # macos-latest is arm64, macos-13 is x86_64 — both are needed, or a wrong
+      # `intel:` sha256 would never be exercised.
+      matrix:
+        os: [macos-latest, macos-13]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Tap this checkout
+        run: brew tap codingprotocols/tap "$GITHUB_WORKSPACE"
+
+      - name: Audit formula
+        run: brew audit --strict --online codingprotocols/tap/podscape-mcp
+
+      - name: Audit cask
+        run: brew audit --strict --online --cask codingprotocols/tap/podscape
+
+      - name: Install and test formula
+        run: |
+          brew install codingprotocols/tap/podscape-mcp
+          podscape-mcp --help | grep -q "Podscape MCP Server"
+          brew test codingprotocols/tap/podscape-mcp
+
+      - name: Install cask
+        run: |
+          brew install --cask codingprotocols/tap/podscape
+          test -d "/Applications/Podscape.app" || {
+            echo "Podscape.app was not installed" >&2; exit 1; }
+
+      - name: Verify installed app is signed and notarized
+        run: |
+          codesign --verify --deep --strict "/Applications/Podscape.app"
+          spctl --assess --type execute "/Applications/Podscape.app"
