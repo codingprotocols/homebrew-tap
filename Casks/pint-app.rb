@@ -1,6 +1,6 @@
 cask "pint-app" do
-  version "1.4.3"
-  sha256 "9f0393539e565a913f2d045023a23e09c7c1b5548944ab26e3a0fb4d80cec471"
+  version "1.4.4"
+  sha256 "d5bfb3b47334921f32d2d91530725b4c63c45110b05475e064831190a61ae9a2"
 
   url "https://github.com/codingprotocols/Pint/releases/download/v#{version}/Pint-#{version}.dmg",
       verified: "github.com/codingprotocols/Pint/"
