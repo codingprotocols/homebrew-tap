@@ -37,7 +37,7 @@ jobs:
           ln -s "$GITHUB_WORKSPACE" "$TAPDIR"
           brew tap  # list, to confirm it is registered
 
-      - name: Verify both dmg URLs resolve
+      - name: Verify podscape dmg URLs resolve
         run: |
           version=$(grep -m1 -o 'version "[^"]*"' Casks/podscape.rb | cut -d'"' -f2)
           base="https://github.com/codingprotocols/podscape/releases/download/v${version}"
@@ -47,11 +47,24 @@ jobs:
             [ "$code" = "200" ] || { echo "::error::$f did not resolve (HTTP $code)"; exit 1; }
           done
 
+      # Pint ships a single universal dmg, so there is only one URL to check.
+      # Its cask is hand-maintained, which makes a stale version or checksum
+      # here more likely than for the generated podscape files.
+      - name: Verify pint dmg URL resolves
+        run: |
+          version=$(grep -m1 -o 'version "[^"]*"' Casks/pint.rb | cut -d'"' -f2)
+          url="https://github.com/codingprotocols/Pint/releases/download/v${version}/Pint-${version}.dmg"
+          code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 300 "$url")
+          echo "$code  $url"
+          [ "$code" = "200" ] || { echo "::error::Pint-${version}.dmg did not resolve (HTTP $code)"; exit 1; }
+
       - name: Audit formula
         run: brew audit --strict --online codingprotocols/tap/podscape-mcp
 
-      - name: Audit cask
-        run: brew audit --strict --online --cask codingprotocols/tap/podscape
+      - name: Audit casks
+        run: |
+          brew audit --strict --online --cask codingprotocols/tap/podscape
+          brew audit --strict --online --cask codingprotocols/tap/pint
 
       - name: Install and test formula
         run: |
@@ -59,13 +72,23 @@ jobs:
           podscape-mcp --help | grep -q "Podscape MCP Server"
           brew test codingprotocols/tap/podscape-mcp
 
-      - name: Install cask
+      - name: Install casks
         run: |
           brew install --cask codingprotocols/tap/podscape
           test -d "/Applications/Podscape.app" || {
             echo "::error::Podscape.app was not installed"; exit 1; }
 
-      - name: Verify installed app is signed and notarized
+          # macos-latest is macOS 26, which satisfies pint's `depends_on
+          # macos: :tahoe`. If that label ever moves back to an older image,
+          # this step fails loudly rather than silently skipping the cask.
+          brew install --cask codingprotocols/tap/pint
+          test -d "/Applications/Pint.app" || {
+            echo "::error::Pint.app was not installed"; exit 1; }
+
+      - name: Verify installed apps are signed and notarized
         run: |
-          codesign --verify --deep --strict "/Applications/Podscape.app"
-          spctl --assess --type execute "/Applications/Podscape.app"
+          for app in "/Applications/Podscape.app" "/Applications/Pint.app"; do
+            echo "== $app"
+            codesign --verify --deep --strict "$app"
+            spctl --assess --type execute "$app"
+          done
