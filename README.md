@@ -28,8 +28,17 @@ brew install codingprotocols/tap/podscape-mcp
 ## Upgrades
 
 Both desktop apps have built-in updaters, so their casks are marked
-`auto_updates true` and **`brew upgrade` deliberately leaves them alone** — the
-apps keep themselves current. To have Homebrew drive the upgrade instead:
+`auto_updates true` — the apps keep themselves current whether or not Homebrew
+is involved.
+
+That flag does **not** reliably stop `brew upgrade` from also upgrading them.
+Observed with `pint-app` on Homebrew 6.0.16: it appears in plain
+`brew outdated --cask` and a bare `brew upgrade --cask` upgrades it, no
+`--greedy` required — even though other `auto_updates` casks on the same machine
+were skipped. Treat `brew upgrade` as *able* to upgrade these casks; it lands on
+the same version the in-app updater would.
+
+`--greedy` remains the way to force casks Homebrew would otherwise skip:
 
 ```sh
 brew upgrade --cask --greedy pint-app
