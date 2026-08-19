@@ -50,24 +50,37 @@ normally.
 
 ## Maintenance
 
-`Casks/podscape.rb` and `Formula/podscape-mcp.rb` are **generated** — they are
-rendered from templates in the
-[podscape](https://github.com/codingprotocols/podscape) repository and pushed
-here automatically on every `v*` tag. Hand edits are overwritten by the next
-release; change the template in `podscape` instead.
+Both casks are bumped by automation in the app's own repository. On every `v*`
+tag, that repo's release workflow rewrites `version` and `sha256` here and
+**opens a pull request** — it never pushes to `main` directly, so the CI below
+always runs before a change reaches users. Review and merge the PR to publish.
 
-`Casks/pint-app.rb` is **maintained by hand**. Each Pint release needs `version` and
-`sha256` updated here:
+| File | Bumped by | Notes |
+|------|-----------|-------|
+| `Casks/pint-app.rb` | [Pint](https://github.com/codingprotocols/Pint) release workflow | checksum is the post-staple hash computed during notarization |
+| `Casks/podscape.rb` | [podscape](https://github.com/codingprotocols/podscape) release workflow | checksums come from GitHub's per-asset digests |
+| `Formula/podscape-mcp.rb` | **nobody — hand-maintained** | see below |
+
+There are no templates: the automation edits these files in place, so hand edits
+are preserved rather than overwritten.
+
+`Formula/podscape-mcp.rb` is deliberately excluded from automation. It
+references `podscape-mcp-linux-arm64`, which podscape's release workflow no
+longer builds — v4.0.4 has that asset only because an earlier workflow produced
+it. Bumping the formula's version to any newer release would point Linux/arm64
+users at a 404, so it needs a manual checksum refresh, and really needs that
+mismatch resolved first (either restore the `linux/arm64` build or drop the
+`on_arm` block).
+
+To refresh a checksum by hand, GitHub publishes a digest per release asset:
 
 ```sh
-V=1.4.4   # the new version
-curl -sL -o /tmp/Pint-$V.dmg \
-  "https://github.com/codingprotocols/Pint/releases/download/v$V/Pint-$V.dmg"
-shasum -a 256 /tmp/Pint-$V.dmg
+gh api repos/codingprotocols/podscape/releases/tags/v4.0.4 \
+  --jq '.assets[] | "\(.name)  \(.digest)"'
 ```
 
-CI on this repo audits and installs every cask on each push, so a wrong checksum
-or URL is caught before it reaches users.
+CI on this repo audits and installs every cask on each push and pull request, so
+a wrong checksum or URL is caught before it reaches users.
 
 ## Issues
 
