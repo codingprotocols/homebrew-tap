@@ -21,11 +21,12 @@ class PodscapeMcp < Formula
     end
   end
 
+  # Linux/arm64 is deliberately unsupported: podscape's release workflow builds
+  # linux-amd64 only. v4.0.4 shipped a linux-arm64 binary from an earlier
+  # workflow, so an on_arm block worked by accident — bumping this formula to
+  # any newer release would have pointed arm64 users at a 404. Restore this
+  # block if and when the release workflow builds that target again.
   on_linux do
-    on_arm do
-      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.4/podscape-mcp-linux-arm64"
-      sha256 "136633dd7af48672c9e759ab9b64cfca5fd2c72afc5e3bdaa16e73a82dbd1dab"
-    end
     on_intel do
       url "https://github.com/codingprotocols/podscape/releases/download/v4.0.4/podscape-mcp-linux-amd64"
       sha256 "834b5bebf33b8cab33223c50397317f67e594bbe494f5d0dc4b1d5e2228417f1"
