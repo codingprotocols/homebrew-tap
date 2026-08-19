@@ -6,7 +6,7 @@ Homebrew formulae and casks for [Coding Protocols](https://github.com/codingprot
 
 ```sh
 # Pint — Homebrew package manager GUI (macOS)
-brew install --cask codingprotocols/tap/pint
+brew install --cask codingprotocols/tap/pint-app
 
 # Podscape — Kubernetes management desktop client (macOS)
 brew install --cask codingprotocols/tap/podscape
@@ -21,7 +21,7 @@ brew install codingprotocols/tap/podscape-mcp
 
 | Name | Type | Platforms |
 |------|------|-----------|
-| `pint` | Cask | macOS 26+ (Apple Silicon and Intel) |
+| `pint-app` | Cask | macOS 26+ (Apple Silicon and Intel) |
 | `podscape` | Cask | macOS 12+ (Apple Silicon and Intel) |
 | `podscape-mcp` | Formula | macOS and Linux, arm64 and x86_64 |
 
@@ -32,7 +32,7 @@ Both desktop apps have built-in updaters, so their casks are marked
 apps keep themselves current. To have Homebrew drive the upgrade instead:
 
 ```sh
-brew upgrade --cask --greedy pint
+brew upgrade --cask --greedy pint-app
 brew upgrade --cask --greedy podscape
 ```
 
@@ -47,7 +47,7 @@ rendered from templates in the
 here automatically on every `v*` tag. Hand edits are overwritten by the next
 release; change the template in `podscape` instead.
 
-`Casks/pint.rb` is **maintained by hand**. Each Pint release needs `version` and
+`Casks/pint-app.rb` is **maintained by hand**. Each Pint release needs `version` and
 `sha256` updated here:
 
 ```sh

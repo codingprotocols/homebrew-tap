@@ -52,7 +52,7 @@ jobs:
       # here more likely than for the generated podscape files.
       - name: Verify pint dmg URL resolves
         run: |
-          version=$(grep -m1 -o 'version "[^"]*"' Casks/pint.rb | cut -d'"' -f2)
+          version=$(grep -m1 -o 'version "[^"]*"' Casks/pint-app.rb | cut -d'"' -f2)
           url="https://github.com/codingprotocols/Pint/releases/download/v${version}/Pint-${version}.dmg"
           code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 300 "$url")
           echo "$code  $url"
@@ -64,7 +64,7 @@ jobs:
       - name: Audit casks
         run: |
           brew audit --strict --online --cask codingprotocols/tap/podscape
-          brew audit --strict --online --cask codingprotocols/tap/pint
+          brew audit --strict --online --cask codingprotocols/tap/pint-app
 
       - name: Install and test formula
         run: |
@@ -81,7 +81,7 @@ jobs:
           # macos-latest is macOS 26, which satisfies pint's `depends_on
           # macos: :tahoe`. If that label ever moves back to an older image,
           # this step fails loudly rather than silently skipping the cask.
-          brew install --cask codingprotocols/tap/pint
+          brew install --cask codingprotocols/tap/pint-app
           test -d "/Applications/Pint.app" || {
             echo "::error::Pint.app was not installed"; exit 1; }
 
