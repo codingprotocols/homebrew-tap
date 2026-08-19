@@ -2,8 +2,10 @@ class PodscapeMcp < Formula
   desc "MCP server exposing Kubernetes clusters as tools for AI assistants"
   homepage "https://github.com/codingprotocols/podscape"
   license "Apache-2.0"
-  # No `version` stanza: Homebrew scans 4.0.4 from the v4.0.4 path segment
-  # in the URLs below, and `brew audit` rejects declaring it a second time.
+  # No `version` stanza: Homebrew scans the version from the `v<x.y.z>` path
+  # segment in the URLs below, and `brew audit` rejects declaring it a second
+  # time. Podscape's release workflow rewrites those URLs and checksums, so
+  # nothing here names a specific version.
 
   livecheck do
     url :stable
