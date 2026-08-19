@@ -23,7 +23,7 @@ brew install codingprotocols/tap/podscape-mcp
 |------|------|-----------|
 | `pint-app` | Cask | macOS 26+ (Apple Silicon and Intel) |
 | `podscape` | Cask | macOS 12+ (Apple Silicon and Intel) |
-| `podscape-mcp` | Formula | macOS and Linux, arm64 and x86_64 |
+| `podscape-mcp` | Formula | macOS (arm64, x86_64), Linux (x86_64) |
 
 ## Upgrades
 
@@ -64,13 +64,15 @@ always runs before a change reaches users. Review and merge the PR to publish.
 There are no templates: the automation edits these files in place, so hand edits
 are preserved rather than overwritten.
 
-`Formula/podscape-mcp.rb` is deliberately excluded from automation. It
-references `podscape-mcp-linux-arm64`, which podscape's release workflow no
-longer builds — v4.0.4 has that asset only because an earlier workflow produced
-it. Bumping the formula's version to any newer release would point Linux/arm64
-users at a 404, so it needs a manual checksum refresh, and really needs that
-mismatch resolved first (either restore the `linux/arm64` build or drop the
-`on_arm` block).
+`Formula/podscape-mcp.rb` is excluded from automation and needs a manual
+checksum refresh on each release.
+
+It previously carried a Linux `on_arm` block pointing at
+`podscape-mcp-linux-arm64`, a binary podscape's release workflow no longer
+builds — v4.0.4 has that asset only because an earlier workflow produced it, so
+the block worked by accident and would have 404'd on the next version bump. That
+block is now removed: **Linux/arm64 is unsupported**. Restore it if the release
+workflow starts building that target again.
 
 To refresh a checksum by hand, GitHub publishes a digest per release asset:
 
