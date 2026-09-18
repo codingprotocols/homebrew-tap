@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       # `brew tap <name> <path>` fails here with a remote mismatch, because
       # setup-homebrew has already registered the tap. Point the tap directory
