@@ -2,8 +2,7 @@ cask "pint-app" do
   version "1.4.4"
   sha256 "d5bfb3b47334921f32d2d91530725b4c63c45110b05475e064831190a61ae9a2"
 
-  url "https://github.com/codingprotocols/Pint/releases/download/v#{version}/Pint-#{version}.dmg",
-      verified: "github.com/codingprotocols/Pint/"
+  url "https://github.com/codingprotocols/Pint/releases/download/v#{version}/Pint-#{version}.dmg"
   # Token is "pint-app", not "pint": homebrew/core already ships a
   # "pint" formula (Cloudflare's Prometheus rule linter), and a clashing
   # token fails `brew audit --strict` and makes `brew install pint`

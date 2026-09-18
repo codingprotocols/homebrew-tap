@@ -5,8 +5,7 @@ cask "podscape" do
   sha256 arm:   "d1826f7aa056b1f83b2ffaf423f9bd445ab2ef8b740a01a18978bb52e588c0d8",
          intel: "e213d95c7c86c3a10868ae5af7b623bb046f63555d5926eae56ca79ff5369a2b"
 
-  url "https://github.com/codingprotocols/podscape/releases/download/v#{version}/Podscape-#{version}#{arch}.dmg",
-      verified: "github.com/codingprotocols/podscape/"
+  url "https://github.com/codingprotocols/podscape/releases/download/v#{version}/Podscape-#{version}#{arch}.dmg"
   name "Podscape"
   desc "Kubernetes management desktop client"
   homepage "https://github.com/codingprotocols/podscape"
