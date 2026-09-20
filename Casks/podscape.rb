@@ -1,9 +1,9 @@
 cask "podscape" do
   arch arm: "-arm64", intel: ""
 
-  version "4.0.4"
-  sha256 arm:   "d1826f7aa056b1f83b2ffaf423f9bd445ab2ef8b740a01a18978bb52e588c0d8",
-         intel: "e213d95c7c86c3a10868ae5af7b623bb046f63555d5926eae56ca79ff5369a2b"
+  version "4.0.5"
+  sha256 arm:   "01226bf325b02bed35acf13c7c6ed305d0e7182960e336fe3649d7ab055a92e7",
+         intel: "7dcfb4f175a8fc4e7c2d7fca0c7892783e474a3b7c8de29347ded9bb7d56782e"
 
   url "https://github.com/codingprotocols/podscape/releases/download/v#{version}/Podscape-#{version}#{arch}.dmg"
   name "Podscape"
