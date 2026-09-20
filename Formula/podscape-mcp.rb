@@ -14,12 +14,12 @@ class PodscapeMcp < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.4/podscape-mcp-darwin-arm64"
-      sha256 "49f58e03d552d270b2b6c41d6599af2ce05912a8701c515070b2f91b5c90555f"
+      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.5/podscape-mcp-darwin-arm64"
+      sha256 "dfffe12182550dc2c8c7e133ce73cde62358c18f88df677fa0c41514bdca835a"
     end
     on_intel do
-      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.4/podscape-mcp-darwin-amd64"
-      sha256 "35ea0225ad69b43b229a4fd5ec85e0522d98ff8656f67b48956040dfc66a67e5"
+      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.5/podscape-mcp-darwin-amd64"
+      sha256 "6456591f6225f2f414953b1461dfa5053e7db8758f48d5d9ee4d4764e52e16d9"
     end
   end
 
@@ -30,8 +30,8 @@ class PodscapeMcp < Formula
   # block if and when the release workflow builds that target again.
   on_linux do
     on_intel do
-      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.4/podscape-mcp-linux-amd64"
-      sha256 "834b5bebf33b8cab33223c50397317f67e594bbe494f5d0dc4b1d5e2228417f1"
+      url "https://github.com/codingprotocols/podscape/releases/download/v4.0.5/podscape-mcp-linux-amd64"
+      sha256 "09c362c0a88e4c7e794f830840800bdf030f2f8096019950255855b52881496f"
     end
   end
 
