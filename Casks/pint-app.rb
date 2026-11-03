@@ -1,6 +1,6 @@
 cask "pint-app" do
-  version "1.5.0"
-  sha256 "50a5d252ac3dc6941fccca98b01a1daff3f0dc586b8c33934c45f476411e689f"
+  version "1.6.0"
+  sha256 "58917b2a5d2116ba0235a417beb9be4bdca408b4c488b07a53c3bac090bdcf64"
 
   url "https://github.com/codingprotocols/Pint/releases/download/v#{version}/Pint-#{version}.dmg"
   # Token is "pint-app", not "pint": homebrew/core already ships a
